@@ -1,4 +1,6 @@
 import formatQuestions from './format/bbQuestions';
+import extractImage from './format/questionImages';
+import downloadImages from './download/bbImages';
 
 import getArgv from './util/getArgv';
 import readFile from './util/readFile';
@@ -12,7 +14,16 @@ async function main() {
   const opts = parseArgs();
   const data = await xmlToJson( await readFile( opts.inFile ) );
   const questions = formatQuestions( data );
-  await writeFile( opts.outFile, JSON.stringify( questions ) );
+
+  questions.forEach( question => {
+
+    question.images = extractImage( question );
+
+  } );
+
+  const imageFiles = await downloadImages( questions );
+
+  await writeFile( opts.outFile, JSON.stringify( imageFiles ) );
 
 }
 

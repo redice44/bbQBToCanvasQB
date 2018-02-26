@@ -2,11 +2,11 @@ export default questions => separateQuestions( questions ).map( buildQuestion );
 
 const separateQuestions = data => data.questestinterop.assessment[ 0 ].section[ 0 ].item;
 
-const buildQuestion = data => {
+const buildQuestion = ( data, i ) => {
 
   const question = {
 
-    title: data.$.title,
+    title: `Question ${ '0'.repeat( 4 - ( '' + ( i + 1 ) ).length )}${ i + 1 }`,
     type: data.itemmetadata[ 0 ].bbmd_questiontype[ 0 ],
     html: data.presentation[ 0 ].flow[ 0 ].flow[ 0 ].flow[ 0 ].material[ 0 ].mat_extension[ 0 ].mat_formattedtext[ 0 ]._,
     answers: []

@@ -1,4 +1,6 @@
+config/*
 data/*
 node_modules/*
 src/**/*.js
 src/**/*.js.map
+.DS_Store
