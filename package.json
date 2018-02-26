@@ -16,6 +16,8 @@
     "typescript": "^2.7.2"
   },
   "dependencies": {
+    "config": "^1.29.4",
+    "jsdom": "^11.6.2",
     "xml2js": "^0.4.19"
   }
 }
