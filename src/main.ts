@@ -22,10 +22,10 @@ async function main() {
 
   } );
 
-  // const imageFiles = await downloadImages( questions );
-  const res = await uploadImages( 335, 'Question 0001-1.jpg' );
+  const imageFiles = await downloadImages( questions, 'data/quiz1' );
+  // const res = await uploadImages( 335, 'Question 0001-1.jpg' );
 
-  await writeFile( opts.outFile, JSON.stringify( res ) );
+  await writeFile( opts.outFile, JSON.stringify( imageFiles ) );
 
 }
 

@@ -1,8 +1,11 @@
 import * as config from 'config';
 import * as fs from 'fs';
+import * as mkdirp from 'mkdirp';
 import * as Puppeteer from 'puppeteer';
 
-export default async questions => {
+export default async ( questions, downloadDir ) => {
+
+  mkdirp.sync( downloadDir );
 
   const imageFiles = [];
 
@@ -21,7 +24,7 @@ export default async questions => {
 
     for ( let imageNum = 0; imageNum < questions[ questionNum ].images.length; imageNum++ ) {
 
-      const fileName = await download( browser, `${ config.get( 'LMS.bb' ) }${ questions[ questionNum ].images[ imageNum ] }`, `${ questions[ questionNum ].title }-${ imageNum + 1 }` )
+      const fileName = await download( browser, `${ config.get( 'LMS.bb' ) }${ questions[ questionNum ].images[ imageNum ] }`, downloadDir, `${ questions[ questionNum ].title }-${ imageNum + 1 }` )
       imageFiles.push( {
 
         question: questions[ questionNum ].title,
@@ -46,7 +49,7 @@ export default async questions => {
   Modified by: @redice44 <Matthew Thomson>
 */
 
-async function download ( browser: Puppeteer.Browser, uri, imageName ) {
+async function download ( browser: Puppeteer.Browser, uri, imageLoc, imageName ) {
 
   const page = await browser.newPage();
   const responses = [];
@@ -68,7 +71,7 @@ async function download ( browser: Puppeteer.Browser, uri, imageName ) {
       const fileSplit = fileName.split( '.' );
       const ext = fileSplit[ fileSplit.length - 1 ];
       const buffer = await resp.buffer();
-      fs.writeFileSync( `${ imageName }.${ ext }`, buffer );
+      fs.writeFileSync( `${ imageLoc }/${ imageName }.${ ext }`, buffer );
 
     } );
 
@@ -80,7 +83,7 @@ async function download ( browser: Puppeteer.Browser, uri, imageName ) {
   const ext = fileSplit[ fileSplit.length - 1 ];
   await page.close();
 
-  return `${ imageName }.${ ext }`;
+  return `${ imageLoc }/${ imageName }.${ ext }`;
 
 }
 
