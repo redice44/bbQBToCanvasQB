@@ -15,6 +15,8 @@ main()
 async function main() {
 
   const opts = parseArgs();
+  const quizFolderSplit = opts.inFile.split( '/' ).filter( d => d !== '.' );
+  const quizFolder = quizFolderSplit.slice( 0 , quizFolderSplit.length - 1 ).join( '/' );
   const data = await xmlToJson( await readFile( opts.inFile ) );
   const questions = formatXMLQuestions( data );
 
@@ -24,13 +26,19 @@ async function main() {
 
   } );
 
-  // const imageFiles = await downloadImages( questions, 'data/quiz1' );
-  // const res = await uploadImages( 335, 'Question 0001-1.jpg' );
+  const imageFiles = await downloadImages( questions, quizFolder );
+  const folder = await canvasMkdirp( 335, quizFolder );
+  const canvasImages = []
 
-  console.log( await canvasMkdirp( 335, 'Quiz Images/Quiz 2' ) );
-  // await canvasMkdirp( 335, 'Quiz Images/Quiz 1' );
+  for ( let i = 0; i < imageFiles.length; i++ ) {
 
-  // await writeFile( opts.outFile, JSON.stringify( imageFiles ) );
+    canvasImages.push ( await uploadImages( 335, folder.id, imageFiles[ i ].file ) );
+
+  }
+
+  // console.log( await canvasMkdirp( 335, 'Quiz Images/Quiz 2' ) );
+
+  await writeFile( opts.outFile, JSON.stringify( canvasImages ) );
 
 }
 

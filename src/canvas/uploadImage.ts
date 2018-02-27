@@ -2,10 +2,11 @@ import * as config from 'config';
 import * as fs from 'fs';
 import * as request from 'request-promise-native';
 
-export default async ( courseId, fileName ) => {
+export default async ( courseId, parentFolderId, file ) => {
 
-  const setupRes = await setupFile( courseId, fileName );
-  const uploadRes = await uploadFile( courseId, fileName, setupRes );
+  const fileSplit = file.split( '/' );
+  const setupRes = await setupFile( courseId, parentFolderId, fileSplit[ fileSplit.length - 1 ] );
+  const uploadRes = await uploadFile( courseId, file, setupRes );
 
   if ( uploadRes.statusCode >= 300 && uploadRes.statusCode < 400 ) {
 
@@ -36,7 +37,7 @@ async function finalize ( uri ) {
 
 }
 
-async function uploadFile ( courseId, fileName, res ) {
+async function uploadFile ( courseId, file, res ) {
 
   const opts = {
 
@@ -44,7 +45,7 @@ async function uploadFile ( courseId, fileName, res ) {
     uri: `${ res.upload_url }`,
     formData: Object.assign( {}, res.upload_params, {
 
-      file: fs.createReadStream( fileName )
+      file: fs.createReadStream( file )
 
 
     } ),
@@ -57,7 +58,7 @@ async function uploadFile ( courseId, fileName, res ) {
 
 }
 
-async function setupFile ( courseId, fileName ) {
+async function setupFile ( courseId, parentFolderId, fileName ) {
 
   const opts = {
 
@@ -70,7 +71,8 @@ async function setupFile ( courseId, fileName ) {
     },
     form: {
 
-      name: fileName
+      name: fileName,
+      parent_folder_id: parentFolderId
 
     },
 
