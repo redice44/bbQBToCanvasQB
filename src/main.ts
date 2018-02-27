@@ -2,6 +2,8 @@ import formatXMLQuestions from './bb/formatXMLQuestions';
 import extractImage from './util/extractImageSrc';
 import downloadImages from './bb/downloadImages';
 import uploadImages from './canvas/uploadImage';
+import canvasMkdirp from './canvas/mkdirp';
+
 
 import getArgv from './util/getArgv';
 import readFile from './util/readFile';
@@ -22,10 +24,13 @@ async function main() {
 
   } );
 
-  const imageFiles = await downloadImages( questions, 'data/quiz1' );
+  // const imageFiles = await downloadImages( questions, 'data/quiz1' );
   // const res = await uploadImages( 335, 'Question 0001-1.jpg' );
 
-  await writeFile( opts.outFile, JSON.stringify( imageFiles ) );
+  console.log( await canvasMkdirp( 335, 'Quiz Images/Quiz 2' ) );
+  // await canvasMkdirp( 335, 'Quiz Images/Quiz 1' );
+
+  // await writeFile( opts.outFile, JSON.stringify( imageFiles ) );
 
 }
 
