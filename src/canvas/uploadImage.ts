@@ -63,7 +63,7 @@ async function setupFile ( courseId, parentFolderId, fileName ) {
   const opts = {
 
     method: 'POST',
-    uri: `${ config.get( 'LMS.canvas' ) }api/v1/courses/${ courseId }/files`,
+    uri: `${ config.get( 'canvas.domain' ) }api/v1/courses/${ courseId }/files`,
     headers: {
 
       'Authorization': `Bearer ${ config.get( 'canvas.token' ) }`

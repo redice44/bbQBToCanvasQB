@@ -24,7 +24,7 @@ export default async ( questions, downloadDir ) => {
 
     for ( let imageNum = 0; imageNum < questions[ questionNum ].images.length; imageNum++ ) {
 
-      const fileName = await download( browser, `${ config.get( 'LMS.bb' ) }${ questions[ questionNum ].images[ imageNum ] }`, downloadDir, `${ questions[ questionNum ].title }-${ imageNum + 1 }` )
+      const fileName = await download( browser, `${ config.get( 'bb.domain' ) }${ questions[ questionNum ].images[ imageNum ] }`, downloadDir, `${ questions[ questionNum ].title }-${ imageNum + 1 }` )
       imageFiles.push( {
 
         question: questions[ questionNum ].title,
@@ -89,11 +89,11 @@ async function download ( browser: Puppeteer.Browser, uri, imageLoc, imageName )
 
 async function login( page: Puppeteer.Page ) {
 
-  await page.goto( config.get( 'LMS.bbLogin' ) );
+  await page.goto( config.get( 'bb.login' ) );
   await page.click( '#username' );
-  await page.keyboard.type( config.get( 'user.name' ) );
+  await page.keyboard.type( config.get( 'bb.user.name' ) );
   await page.click( '#password' );
-  await page.keyboard.type( config.get( 'user.pw' ) );
+  await page.keyboard.type( config.get( 'bb.user.pw' ) );
   await page.click( '#fm1 > div.row.btn-row > input.btn-submit' );
   await page.waitForNavigation();
   // await page.waitFor( 2000 );

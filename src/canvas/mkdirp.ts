@@ -34,7 +34,7 @@ async function doesFolderExist( courseId: string|number, folder: string ) {
   const opts = {
 
     method: 'GET',
-    uri: `${ config.get( 'LMS.canvas' ) }api/v1/courses/${ courseId }/folders/by_path/${ folder }`,
+    uri: `${ config.get( 'canvas.domain' ) }api/v1/courses/${ courseId }/folders/by_path/${ folder }`,
     headers: {
 
       'Authorization': `Bearer ${ config.get( 'canvas.token' ) }`
@@ -56,7 +56,7 @@ async function createFolder( courseId: string|number, folder: string ) {
   const opts = {
 
     method: 'POST',
-    uri: `${ config.get( 'LMS.canvas' ) }api/v1/courses/${ courseId }/folders`,
+    uri: `${ config.get( 'canvas.domain' ) }api/v1/courses/${ courseId }/folders`,
     headers: {
 
       'Authorization': `Bearer ${ config.get( 'canvas.token' ) }`
