@@ -1,6 +1,7 @@
 import formatQuestions from './format/bbQuestions';
-import extractImage from './format/questionImages';
+import getImage from './format/getImage';
 import downloadImages from './download/bbImages';
+import uploadImages from './upload/canvasImages';
 
 import getArgv from './util/getArgv';
 import readFile from './util/readFile';
@@ -17,13 +18,14 @@ async function main() {
 
   questions.forEach( question => {
 
-    question.images = extractImage( question );
+    question.images = getImage( question );
 
   } );
 
-  const imageFiles = await downloadImages( questions );
+  // const imageFiles = await downloadImages( questions );
+  const res = await uploadImages( 335, 'Question 0001-1.jpg' );
 
-  await writeFile( opts.outFile, JSON.stringify( imageFiles ) );
+  await writeFile( opts.outFile, JSON.stringify( res ) );
 
 }
 
