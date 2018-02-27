@@ -19,12 +19,8 @@ async function main() {
   const courseId = 335;
 
   const opts = parseArgs();
-  const quizFolderSplit = opts.inFile.split( '/' ).filter( d => d !== '.' );
-  const quizFolder = quizFolderSplit.slice( 0 , quizFolderSplit.length - 1 ).join( '/' );
-  const data = await xmlToJson( await readFile( opts.inFile ) );
-  const questions = formatXMLQuestions( data );
-  // await writeFile( opts.outFile, JSON.stringify( questions ) );
-
+  const config = JSON.parse( await readFile( opts.configFile ) );
+  const questions = formatXMLQuestions( await xmlToJson( await readFile( config.inputFile ) ) );
 
   questions.forEach( question => {
 
@@ -32,8 +28,8 @@ async function main() {
 
   } );
 
-  const imageFiles = await downloadImages( questions, quizFolder );
-  const folder = await canvasMkdirp( courseId, quizFolder );
+  const imageFiles = await downloadImages( questions, config.downloadFolder );
+  const folder = await canvasMkdirp( courseId, config.uploadFolder );
   const canvasImages = [];
 
   for ( let i = 0; i < imageFiles.length; i++ ) {
@@ -58,8 +54,8 @@ async function main() {
 
   }
 
-  await createQuestionBank( courseId, quizFolderSplit[ quizFolderSplit.length - 2 ], questions.map( formatCanvasQuestion ) );
-  await writeFile( opts.outFile, JSON.stringify( questions.map( formatCanvasQuestion ) ) );
+  await createQuestionBank( courseId, config.questionBankTitle, questions.map( formatCanvasQuestion ) );
+  await writeFile( config.outputFile, JSON.stringify( questions.map( formatCanvasQuestion ) ) );
 
 }
 
@@ -68,6 +64,7 @@ function parseArgs() {
   const argv = getArgv();
   const opts = {
 
+    configFile: '',
     inFile: '',
     outFile: ''
 
@@ -85,16 +82,9 @@ function parseArgs() {
 
     switch ( arg.substr( 1 ) ) {
 
-      case 'f':
-      case 'i':
-      case '-file':
-      case '-input':
-        opts.inFile = argv.shift();
-        break;
-
-      case 'o':
-      case '-output':
-        opts.outFile = argv.shift();
+      case 'c':
+      case '-config':
+        opts.configFile = argv.shift();
         break;
 
       default:

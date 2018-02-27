@@ -24,6 +24,8 @@ export default async ( questions, downloadDir ) => {
 
     for ( let imageNum = 0; imageNum < questions[ questionNum ].images.length; imageNum++ ) {
 
+      console.log( `Downloading Question ${ questionNum + 1 } of ${ questions.length }: Image ${ imageNum + 1 } of ${ questions[ questionNum ].images.length }` );
+
       const fileName = await download( browser, `${ config.get( 'bb.domain' ) }${ questions[ questionNum ].images[ imageNum ] }`, downloadDir, `${ questions[ questionNum ].title }-${ imageNum + 1 }` )
       imageFiles.push( {
 
