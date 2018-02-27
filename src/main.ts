@@ -3,6 +3,7 @@ import extractImage from './util/extractImageSrc';
 import downloadImages from './bb/downloadImages';
 import uploadImages from './canvas/uploadImage';
 import canvasMkdirp from './canvas/mkdirp';
+import updateImage from './util/updateImageSrc';
 
 
 import getArgv from './util/getArgv';
@@ -13,6 +14,8 @@ import xmlToJson from './util/xmlToJson';
 main()
 
 async function main() {
+
+  const courseId = 335;
 
   const opts = parseArgs();
   const quizFolderSplit = opts.inFile.split( '/' ).filter( d => d !== '.' );
@@ -27,18 +30,32 @@ async function main() {
   } );
 
   const imageFiles = await downloadImages( questions, quizFolder );
-  const folder = await canvasMkdirp( 335, quizFolder );
-  const canvasImages = []
+  const folder = await canvasMkdirp( courseId, quizFolder );
+  const canvasImages = [];
 
   for ( let i = 0; i < imageFiles.length; i++ ) {
 
-    canvasImages.push ( await uploadImages( 335, folder.id, imageFiles[ i ].file ) );
+    canvasImages.push( await uploadImages( courseId, folder.id, imageFiles[ i ].file ) )
 
   }
 
-  // console.log( await canvasMkdirp( 335, 'Quiz Images/Quiz 2' ) );
+  for ( let imageNum = 0; imageNum < imageFiles.length; imageNum++ ) {
 
-  await writeFile( opts.outFile, JSON.stringify( canvasImages ) );
+    for ( let questionNum = 0; questionNum < questions.length; questionNum++ ) {
+
+      if ( imageFiles[ imageNum ].question === questions[ questionNum ].title ) {
+
+        questions[ questionNum ].html = updateImage( questions[ questionNum ], canvasImages[ imageNum ].preview_url );
+
+      }
+
+    }
+
+  }
+
+  // console.log( await canvasMkdirp( courseId, 'Quiz Images/Quiz 2' ) );
+
+  await writeFile( opts.outFile, JSON.stringify( questions ) );
 
 }
 
