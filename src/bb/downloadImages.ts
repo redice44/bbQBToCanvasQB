@@ -1,8 +1,6 @@
 import * as config from 'config';
 import * as fs from 'fs';
 import * as Puppeteer from 'puppeteer';
-// import { URL } from 'url';
-
 
 export default async questions => {
 
@@ -74,7 +72,7 @@ async function download ( browser: Puppeteer.Browser, uri, imageName ) {
 
     } );
 
-  })
+  } );
 
   await page.goto( uri, { waitUntil: 'networkidle0' } );
   const urlSplit = ( await page.url() ).split( '/' );

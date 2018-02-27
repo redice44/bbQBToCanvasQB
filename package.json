@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc",
+    "clean": "find ./src -type f -name '*.js' -delete && find ./src -type f -name '*.js.map' -delete",
     "test": "echo \"Error: no test specified\" && exit 1",
     "watch": "tsc -w"
   },

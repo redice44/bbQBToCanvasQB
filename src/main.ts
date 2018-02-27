@@ -1,7 +1,7 @@
-import formatQuestions from './format/bbQuestions';
-import getImage from './format/getImage';
-import downloadImages from './download/bbImages';
-import uploadImages from './upload/canvasImages';
+import formatXMLQuestions from './bb/formatXMLQuestions';
+import extractImage from './util/extractImageSrc';
+import downloadImages from './bb/downloadImages';
+import uploadImages from './canvas/uploadImage';
 
 import getArgv from './util/getArgv';
 import readFile from './util/readFile';
@@ -14,11 +14,11 @@ async function main() {
 
   const opts = parseArgs();
   const data = await xmlToJson( await readFile( opts.inFile ) );
-  const questions = formatQuestions( data );
+  const questions = formatXMLQuestions( data );
 
   questions.forEach( question => {
 
-    question.images = getImage( question );
+    question.images = extractImage( question );
 
   } );
 
