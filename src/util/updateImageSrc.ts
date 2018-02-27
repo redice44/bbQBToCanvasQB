@@ -1,19 +1,16 @@
+import * as config from 'config';
 import * as jsdom from 'jsdom';
 
 export default ( question, newSrc ) => {
 
-  const dom = jsdom.JSDOM.fragment( question.html );
+  const dom = jsdom.JSDOM.fragment( `<div>${ question.html }</div>` );
   const imgs = dom.querySelectorAll( 'img' );
-  const imgUrls = [];
 
   for ( let i = 0; i < imgs.length; i++ ) {
 
-    // imgUrls.push( imgs[ i ].setAttribute( 'src', newSrc ) );
-    imgs[ i ].setAttribute( 'src', newSrc );
+    imgs[ i ].setAttribute( 'src', `${ config.get( 'canvas.domain' ) }${ newSrc }` );
 
   }
-
-  console.log( dom.firstChild.outerHTML );
 
   return dom.firstChild.outerHTML;
 

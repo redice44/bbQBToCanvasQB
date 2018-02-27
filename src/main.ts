@@ -4,7 +4,8 @@ import downloadImages from './bb/downloadImages';
 import uploadImages from './canvas/uploadImage';
 import canvasMkdirp from './canvas/mkdirp';
 import updateImage from './util/updateImageSrc';
-
+import createQuestionBank from './canvas/createQuestionBank';
+import formatCanvasQuestion from './canvas/formatQuestion';
 
 import getArgv from './util/getArgv';
 import readFile from './util/readFile';
@@ -22,6 +23,8 @@ async function main() {
   const quizFolder = quizFolderSplit.slice( 0 , quizFolderSplit.length - 1 ).join( '/' );
   const data = await xmlToJson( await readFile( opts.inFile ) );
   const questions = formatXMLQuestions( data );
+  // await writeFile( opts.outFile, JSON.stringify( questions ) );
+
 
   questions.forEach( question => {
 
@@ -35,7 +38,9 @@ async function main() {
 
   for ( let i = 0; i < imageFiles.length; i++ ) {
 
-    canvasImages.push( await uploadImages( courseId, folder.id, imageFiles[ i ].file ) )
+    console.log( `Uploading Image ${ i + 1 } of ${ imageFiles.length }` );
+
+    canvasImages.push( await uploadImages( courseId, folder.id, imageFiles[ i ].file ) );
 
   }
 
@@ -45,7 +50,7 @@ async function main() {
 
       if ( imageFiles[ imageNum ].question === questions[ questionNum ].title ) {
 
-        questions[ questionNum ].html = updateImage( questions[ questionNum ], canvasImages[ imageNum ].preview_url );
+        questions[ questionNum ].html = updateImage( questions[ questionNum ], `courses/${ courseId }/files/${ canvasImages[ imageNum ].id }/download` );
 
       }
 
@@ -53,9 +58,8 @@ async function main() {
 
   }
 
-  // console.log( await canvasMkdirp( courseId, 'Quiz Images/Quiz 2' ) );
-
-  await writeFile( opts.outFile, JSON.stringify( questions ) );
+  await createQuestionBank( courseId, quizFolderSplit[ quizFolderSplit.length - 2 ], questions.map( formatCanvasQuestion ) );
+  await writeFile( opts.outFile, JSON.stringify( questions.map( formatCanvasQuestion ) ) );
 
 }
 

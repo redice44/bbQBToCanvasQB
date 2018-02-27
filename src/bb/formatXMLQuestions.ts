@@ -1,4 +1,4 @@
-export default questions => separateQuestions( questions ).map( buildQuestion );
+export default questions => separateQuestions( questions ).map( buildQuestion ).filter( data => !!data );
 
 const separateQuestions = data => data.questestinterop.assessment[ 0 ].section[ 0 ].item;
 
@@ -26,7 +26,9 @@ const buildQuestion = ( data, i ) => {
       break;
 
     default:
-      throw new Error( `Unhandled question type: ${ question.type }` );
+      // throw new Error( `Unhandled question type: ${ question.type }` );
+      console.log( `Unhandled question type #${ i + 1 }: ${ question.type }` );
+      return null;
 
   }
 
